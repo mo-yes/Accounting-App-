@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+import { Toaster } from "sonner";
 
 const cairo = Cairo({
   subsets: ["arabic"],
@@ -9,7 +11,7 @@ const cairo = Cairo({
 
 export const metadata: Metadata = {
   title: "برنامج محاسبة",
-  description: "برنامج محاسبة للأجهزة المنزلية",
+  description: "برنامج محاسبة للأجهزة والادوات المنزلية",
 };
 
 export default function RootLayout({
@@ -20,7 +22,10 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={cairo.className}>
+        <AuthProvider>
         {children}
+        <Toaster richColors position="top-right" />
+        </AuthProvider>
       </body>
     </html>
   );
