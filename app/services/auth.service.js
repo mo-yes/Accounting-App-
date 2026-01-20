@@ -1,42 +1,57 @@
-// Fake Auth Service (دلوقتي)
-// بعدين هتستبدل timeout بـ API حقيقي
+import { hashPassword } from "../lib/crypto";
+import { db } from "../lib/db";
 
-export const authService = {
-  login(email, password) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email && password) {
-          resolve({
-            id: 1,
-            name: "مستخدم تجريبي",
-            email,
-            token: "fake-jwt-token",
-          });
-        } else {
-          reject(new Error("بيانات تسجيل الدخول غير صحيحة"));
-        }
-      }, 1500);
-    });
-  },
+/**
+ * Login باستخدام email & password
+ */
+export async function loginWithEmail(email, password) {
+  const hashedPassword = await hashPassword(password);
 
-  loginWithGoogle() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          id: 2,
-          name: "Google User",
-          email: "google@gmail.com",
-          token: "google-fake-token",
-        });
-      }, 1200);
-    });
-  },
+  const user = await db.users
+    .where("email")
+    .equals(email)
+    .first();
 
-  logout() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 500);
-    });
-  },
+  if (!user || user.password !== hashedPassword) {
+    throw new Error("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+  }
+
+  return {
+    id: user.id,
+    email: user.email,
+  };
+}
+
+/**
+ * Register مستخدم جديد
+ */
+export async function registerWithEmail(name, email, password) {
+  const existingUser = await db.users
+    .where("email")
+    .equals(email)
+    .first();
+
+  if (existingUser) {
+    throw new Error("هذا البريد مسجل بالفعل");
+  }
+
+  const hashedPassword = await hashPassword(password);
+
+  const user = {
+    id: crypto.randomUUID(),
+    name,
+    email,
+    password: hashedPassword,
+    createdAt: new Date().toISOString(),
+  };
+
+  await db.users.add(user);
+
+  return {
+  id: user.id,
+  email: user.email,
+  name: user.name, // ✅
 };
+
+}
+
