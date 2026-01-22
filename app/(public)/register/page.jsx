@@ -5,8 +5,8 @@ import Link from "next/link";
 import { ArrowLeft, Mail, Lock, User } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { registerSchema } from "../schemas/auth.schema";
-import { registerWithEmail } from "../services/auth.service";
+import { registerSchema } from "../../schemas/auth.schema";
+import { registerWithEmail } from "../../../services/auth.service";
 import Input from "@/components/Input/Input";
 
 export default function RegisterPage() {
@@ -46,24 +46,16 @@ export default function RegisterPage() {
     const toastId = toast.loading("جاري إنشاء الحساب...");
 
     try {
-      await registerWithEmail(
-        form.name,
-        form.email,
-        form.password
-      );
+      await registerWithEmail(form.name, form.email, form.password);
 
-      toast.success(
-        "تم إنشاء الحساب بنجاح، سجل الدخول الآن",
-        { id: toastId }
-      );
+      toast.success("تم إنشاء الحساب بنجاح، سجل الدخول الآن", { id: toastId });
 
       localStorage.removeItem("session");
       router.replace("/login");
     } catch (err) {
-      toast.error(
-        err?.message || "حدث خطأ أثناء إنشاء الحساب",
-        { id: toastId }
-      );
+      toast.error(err?.message || "حدث خطأ أثناء إنشاء الحساب", {
+        id: toastId,
+      });
     } finally {
       setLoading(false);
     }
@@ -79,9 +71,7 @@ export default function RegisterPage() {
         <Link href="/" aria-label="رجوع">
           <ArrowLeft />
         </Link>
-        <h2 className="flex-1 text-center font-semibold">
-          إنشاء حساب جديد
-        </h2>
+        <h2 className="flex-1 text-center font-semibold">إنشاء حساب جديد</h2>
       </header>
 
       {/* Form */}

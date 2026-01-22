@@ -24,9 +24,9 @@ export default function RootLayout({
     <html lang="ar" dir="rtl">
       <body className={cairo.className}>
         <AuthProvider>
-          <AuthGuard >
+          {/* <AuthGuard > */}
             {children}
-          </AuthGuard>
+          {/* </AuthGuard> */}
         
         <Toaster richColors position="top-right" />
         </AuthProvider>

@@ -5,12 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Mail, Lock } from "lucide-react";
 import { toast } from "sonner";
-import { loginSchema } from "../schemas/auth.schema";
+import { loginSchema } from "../../schemas/auth.schema";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "../stores/auth.store";
-import { loginWithEmail } from "../services/auth.service";
+import { useAuthStore } from "../../../stores/auth.store";
+import { loginWithEmail } from "../../../services/auth.service";
 import Input from "@/components/Input/Input";
-
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,18 +23,17 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-// 1️⃣ تحميل السيشن مرة واحدة
-useEffect(() => {
-  auth.loadSession();
-}, []);
+  // 1️⃣ تحميل السيشن مرة واحدة
+  useEffect(() => {
+    auth.loadSession();
+  }, []);
 
-// 2️⃣ لو فيه user → روح الهوم
-useEffect(() => {
-  if (auth.userId) {
-    router.replace("/home");
-  }
-}, [auth.userId]);
-
+  // 2️⃣ لو فيه user → روح الهوم
+  useEffect(() => {
+    if (auth.userId) {
+      router.replace("/home");
+    }
+  }, [auth.userId]);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -67,9 +65,7 @@ useEffect(() => {
       router.replace("/home");
     } catch (err) {
       const message =
-        err instanceof Error
-          ? err.message
-          : "حدث خطأ أثناء تسجيل الدخول";
+        err instanceof Error ? err.message : "حدث خطأ أثناء تسجيل الدخول";
 
       toast.error(message, { id: toastId });
     } finally {
@@ -103,24 +99,20 @@ useEffect(() => {
           dir="rtl"
           className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-6"
         >
-          <h1 className="text-2xl font-bold text-center mb-6">
-            تسجيل الدخول
-          </h1>
+          <h1 className="text-2xl font-bold text-center mb-6">تسجيل الدخول</h1>
 
           {/* Email */}
           <div className="mb-4">
             <div className="relative">
-
               <Input
-                          label="البريد الإلكتروني"
-                          name="email"
-                          type="email"
-                          value={form.email}
-                          onChange={handleChange}
-                          error={errors.email}
-                          icon={<Mail size={18} />}
-                        />
-
+                label="البريد الإلكتروني"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                error={errors.email}
+                icon={<Mail size={18} />}
+              />
             </div>
             {errors.email && (
               <p className="text-red-500 text-xs mt-1">{errors.email}</p>
@@ -130,22 +122,18 @@ useEffect(() => {
           {/* Password */}
           <div className="mb-6">
             <div className="relative">
-
               <Input
-                          label="كلمة المرور"
-                          name="password"
-                          type="password"
-                          value={form.password}
-                          onChange={handleChange}
-                          error={errors.password}
-                          icon={<Lock size={18} />}
-                        />
-
+                label="كلمة المرور"
+                name="password"
+                type="password"
+                value={form.password}
+                onChange={handleChange}
+                error={errors.password}
+                icon={<Lock size={18} />}
+              />
             </div>
             {errors.password && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.password}
-              </p>
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             )}
           </div>
 
